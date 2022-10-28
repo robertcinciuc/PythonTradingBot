@@ -1,6 +1,19 @@
 import requests;
 import json;
+import os, sys;
 import time;
+
+# Importing psutil
+sys.stderr = open(os.devnull, "w");
+try:
+    import psutil;
+except:
+    print("Actual psutil modules not found");
+finally:
+    sys.stderr = sys.__stderr__
+
+# Local imports
+from Utils import Utils;
 
 # with open('./testImage.png', 'wb') as f:
 #     f.write(response.content);
@@ -19,4 +32,6 @@ for i in range(0, 10):
 print('Best ask prices:');    
 for jsonResponse in jsonResponseList:
     print(jsonResponse["data"]["bestAsk"]);
+
+Utils.printMemoryConsumption(psutil.Process(os.getpid()));
 
