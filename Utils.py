@@ -1,15 +1,6 @@
 import os, sys;
 import resource;
 
-# Importing psutil
-sys.stderr = open(os.devnull, "w");
-try:
-    import psutil;
-except:
-    print("Actual psutil modules not found");
-finally:
-    sys.stderr = sys.__stderr__
-
 class Utils:
     
     @staticmethod
