@@ -23,9 +23,9 @@ def main():
         time.sleep(0.1);
         print(i);
     
-    print('Best ask prices:');    
+    print('Prices:');    
     for jsonResponse in jsonResponseList:
-        print(jsonResponse["data"]["bestAsk"]);
+        print( "BestAsk:" + jsonResponse["data"]["bestAsk"] + "; BestBid:" + jsonResponse["data"]["bestBid"]);
     
     Utils.printMemoryConsumption(psutil.Process(os.getpid()));
 
