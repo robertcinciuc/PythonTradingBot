@@ -15,6 +15,17 @@ finally:
 from Utils import Utils;
 from HttpRequest import HttpRequest;
 
+def logicAsk(jsonResponseList):
+    cumul = 0;
+    for i in range(0, len(jsonResponseList)):
+        if(i > 0):
+            delta = float(jsonResponseList[i]["data"]["bestAsk"]) - float(jsonResponseList[i-1]["data"]["bestAsk"]);
+            print(delta);
+            cumul += delta;
+    
+    print("Cumul:" + str(cumul));
+    
+    
 def main():
     jsonResponseList = [];
     for i in range(0, 10):
@@ -28,7 +39,8 @@ def main():
         print( "BestAsk:" + jsonResponse["data"]["bestAsk"] + "; BestBid:" + jsonResponse["data"]["bestBid"]);
     
     Utils.printMemoryConsumption(psutil.Process(os.getpid()));
-
+    
+    logicAsk(jsonResponseList);
 
 if __name__ == "__main__":
     main()
