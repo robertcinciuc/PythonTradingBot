@@ -10,8 +10,9 @@ class HttpRequest:
         if(response.status_code == 200):
             jsonResponse = json.loads(response.text);
             jsonResponseList.append(jsonResponse);
+            return jsonResponse;
             
         else:
             print("Error: got http code " +str(response.status_code));
-            
+            return None;    
             

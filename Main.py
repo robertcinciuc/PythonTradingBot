@@ -15,32 +15,42 @@ finally:
 from Utils import Utils;
 from HttpRequest import HttpRequest;
 
-def logicAsk(jsonResponseList):
-    cumul = 0;
-    for i in range(0, len(jsonResponseList)):
-        if(i > 0):
-            delta = float(jsonResponseList[i]["data"]["bestAsk"]) - float(jsonResponseList[i-1]["data"]["bestAsk"]);
-            print(delta);
-            cumul += delta;
+def realTimeAskLogic(prev, jsonResponse, cumul):
+    if(prev != None):
+        delta = float(jsonResponse["data"]["bestAsk"]) - float(prev["data"]["bestAsk"]);
+        cumul += delta;
+        print("Cumul:" + str(cumul) + "; Delta:" + str(delta));
+        
+        if(cumul > 2):
+            print("Sell");
+        
+        return cumul;
     
-    print("Cumul:" + str(cumul));
-    
+    return 0;
     
 def main():
     jsonResponseList = [];
-    for i in range(0, 10):
-        HttpRequest.addJsonResponse(jsonResponseList, 'https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=BTC-USDT');
-        
-        time.sleep(0.1);
-        print(i);
+    cumul = 0;
+    prev = None;
     
-    print('Prices:');    
-    for jsonResponse in jsonResponseList:
-        print( "BestAsk:" + jsonResponse["data"]["bestAsk"] + "; BestBid:" + jsonResponse["data"]["bestBid"]);
+    try:
+        while True:
+            jsonResponse = HttpRequest.addJsonResponse(jsonResponseList, 'https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=BTC-USDT');
+            time.sleep(0.01);
+            
+            if(jsonResponse != None):
+                cumul = realTimeAskLogic(prev, jsonResponse, cumul);    
+                prev = jsonResponse;
+                
+    except KeyboardInterrupt:
+        print("Keyboard interrupt");
+        
+    # print('Prices:');    
+    # for jsonResponse in jsonResponseList:
+    #     print( "BestAsk:" + jsonResponse["data"]["bestAsk"] + "; BestBid:" + jsonResponse["data"]["bestBid"]);
     
     Utils.printMemoryConsumption(psutil.Process(os.getpid()));
     
-    logicAsk(jsonResponseList);
 
 if __name__ == "__main__":
     main()
